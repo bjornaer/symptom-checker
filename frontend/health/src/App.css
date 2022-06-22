@@ -1,16 +1,6 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+body {
+  margin: 0;
+  height:100%;
 }
 
 .App-header {
@@ -24,15 +14,111 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.App {
+  text-align: center;
+  font-family: "Sen", sans-serif;
+}
+.title {
+  text-align: center;
+}
+.search-container {
+  width: 400px;
+  margin: 0 auto;
+}
+.search-container input {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  font-variant: tabular-nums;
+  list-style: none;
+  -webkit-font-feature-settings: "tnum";
+  font-feature-settings: "tnum", "tnum";
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  min-width: 0;
+  padding: 4px 11px;
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 14px;
+  line-height: 1.5715;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.search-container input:focus {
+  border-color: #40a9ff;
+  border-right-width: 1px !important;
+  outline: 0;
+  -webkit-box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.item .logo img {
+  width: 30px;
+}
+
+.item-container {
+  width: 78%;
+  margin: 0 auto;
+  margin-top: 45px;
+  display: flex;
+  flex-wrap: wrap;
+  border: #40a9ff;
+}
+
+.item-container .item {
+  flex: 1 1 260px;
+  margin: 12px;
+}
+
+.item-container .item .logo {
+  width: 12%;
+  float: left;
+}
+.item-container .item .name {
+  width: 88%;
+  float: none;
+}
+.item-container .item .name p {
+  margin-top: 2px;
+}
+
+.selected {
+  border-style: solid;
+  border-color: aquamarine;
+}
+
+.scrollable {
+  height: 70vh;
+  overflow-y: scroll;
+}
+
+#wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.symptoms {
+  flex: 50%;
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+}
+
+.ailments {
+  flex: 50%;
+  display: flex;
+  justify-content: center;
+}
+
+.button {
+  background-color: aquamarine;
+  color: white;
+  font-family: sans-serif;
+  font-size: 14px;
+  margin: 20px 0px;
 }

@@ -1,0 +1,52 @@
+import Fuse from "fuse.js";
+import React, { useEffect, useState } from "react"
+import { BarGraph } from "./BarGraph";
+import Item from "./Item";
+import { AilmentHistogram } from "./types";
+
+export const AilmentBox = ({api, hpoList}: {api: string, hpoList: string[]}) => {
+    // Loading data
+    const [data, setData] = useState<AilmentHistogram>();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const endpoint = `${api}/symptoms`
+    const getData = async () => {
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(hpoList)
+            });
+            if (!response.ok) {
+            throw new Error(
+                `This is an HTTP error: The status is ${response.status}`
+            );
+            }
+            let actualData: AilmentHistogram = await response.json();
+            setData(actualData);
+            setError(null);
+        } catch(err: any) {
+            setError(err.message);
+            setData(undefined);
+        } finally {
+            setLoading(false);
+        }  
+    }
+
+    useEffect(() => {
+        getData()
+    }, [])
+
+    return (
+        <div className="App">
+          {loading && <div>A moment please...</div>}
+          {error && (
+            <div>{`There is a problem fetching the post data - ${error}`}</div>
+          )}
+          {data && <BarGraph data={data}/>}
+        </div>
+      );
+}

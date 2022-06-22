@@ -1,6 +1,6 @@
 version: '3'
 services:
-  backend:
+  symptom-checker-backend:
     container_name: symptom-checker-backend
     build: .
     ports: 
@@ -10,16 +10,16 @@ services:
       - ailment
 
 
-  frontend:
+  symptom-checker-frontend:
     container_name: symptom-checker-frontend
     build: ./frontend/health
     environment:
-      - REACT_APP_API=backend:8081
+      - REACT_APP_API=symptom-checker-backend:8081
     ports: 
-      - 3000:3000
+      - 3000:80
     restart: on-failure
     depends_on:
-      - backend
+      - symptom-checker-backend
     networks:
       - ailment
     volumes:
