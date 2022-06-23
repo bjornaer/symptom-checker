@@ -18,7 +18,7 @@ Once you have the deps in, you gotta do `go mod download` on the root and `npm i
 #### Actually running it
 To run this bad boy locally you have three options:
 
-        make run
+        make local
 
 or
 
@@ -41,6 +41,10 @@ A source data file can be passed in as an ENV var under the name `SYMPTOMS_FILE`
 - `POST /api/symptoms`
 - `GET /api/symptoms`
 
+You can run the API by itself by calling:
+
+        make run
+
 #### EXAMPLES
 - `POST /api/symptoms`
     ```sh
@@ -58,6 +62,8 @@ A source data file can be passed in as an ENV var under the name `SYMPTOMS_FILE`
 The UI consists of a list of symptoms, which you can select by clicking, and a search box from where you can type how you feel and see which results line up with your symptom. The search box performs a fuzzy search so type it corerctyly or incorrectly and it's got your back. Once you finish selecting symptoms click the pretty button in the middle of the screen and get a list of most likely ailments you might have based on your symptoms.
 
 You can click on the ailments to see a link to a related expert to consult and also read on other symptoms related to the ailment.
+
+![Visual aid to description above](https://media.giphy.com/media/y4D5CjpXRhbAi7xjkO/giphy.gif)
 ---
 ### Docker
 
