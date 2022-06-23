@@ -1,7 +1,6 @@
-import Fuse from "fuse.js";
 import React, { useEffect, useState } from "react"
 import { BarGraph } from "./BarGraph";
-import Item from "./Item";
+import { AilmentList } from "./AilmentList";
 import { AilmentHistogram } from "./types";
 
 export const AilmentBox = ({api, hpoList}: {api: string, hpoList: string[]}) => {
@@ -46,7 +45,17 @@ export const AilmentBox = ({api, hpoList}: {api: string, hpoList: string[]}) => 
           {error && (
             <div>{`There is a problem fetching the post data - ${error}`}</div>
           )}
-          {data && <BarGraph data={data}/>}
+          {data && <div id="content_container">
+            <div id="list" className="scrollable">
+                <AilmentList data={data}/>
+            </div>
+            {
+                // I was going to add a pretty histogram chart to show bars with the ailments and their frequency
+                // but the bars aren't rendering and I ended up spending more than I wanted with it
+            /* <div id="chart">
+                <BarGraph data={data}/>
+            </div> */}
+            </div>}
         </div>
       );
 }

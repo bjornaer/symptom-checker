@@ -1,63 +1,71 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Group } from '@visx/group';
 import { Bar } from '@visx/shape';
-import { scaleLinear, scaleBand, StringLike } from '@visx/scale';
-import { AilmentHistogram } from './types';
-import { ScaleBand, ScaleLinear } from 'd3-scale';
+import { scaleLinear, scaleBand } from '@visx/scale';
+import { Ailment, BarGraphProps } from './types';
+import { GradientTealBlue } from '@visx/gradient';
 
 // Define the graph dimensions and margins
 const width = 500;
 const height = 500;
+// const verticalMargin = 120;
 const margin = { top: 20, bottom: 20, left: 20, right: 20 };
 
-// Then we'll create some bounds
-const xMax = width - margin.left - margin.right;
-const yMax = height - margin.top - margin.bottom;
+// create some default bounds
+const xDefaultMax = width - margin.left - margin.right;
+const yDefaultMax = height - margin.top - margin.bottom;
 
 
 // Finally we'll embed it all in an SVG
-export const BarGraph = ({data}: {data: AilmentHistogram}) => {
-    const ailments = Object.keys(data)
-    // We'll make some helpers to get at the data we want
-    const x = (d: string) => d;
-    const y = (d: string) => +data[d] * 100;
+export const BarGraph = ({data, width = xDefaultMax, height = yDefaultMax, events = false}: BarGraphProps) => {
+    const ailments = data
 
-    // And then scale the graph by our data
-    const xScale = scaleBand({
-    range: [0, xMax],
-    round: true,
-    domain: ailments.map(x),
-    padding: 0.4,
-    });
-    const yScale = scaleLinear({
-    range: [yMax, 0],
-    round: true,
-    domain: [0, Math.max(...ailments.map(y))],
-    });
+    const xMax = width
+    const yMax = height // - verticalMargin
 
-    // Compose together the scale and accessor functions to get point functions
-    const compose = (
-        scale: ScaleBand<string>|ScaleLinear<number,number,number>, accessor: any
-        ) => (data: string) => scale(accessor(data));
-    const xPoint = compose(xScale, x);
-    const yPoint = compose(yScale, y);
+    // Accesors
+    const getAilment = (d: Ailment) => d.name;
+    const getFreq = (d: Ailment) => d.frequency * 100;
+
+    // Scale the graph by our data
+    const xScale = useMemo(() => scaleBand<string>({
+        range: [0, xMax],
+        round: true,
+        domain: ailments.map(getAilment),
+        padding: 0.4,
+        }), [xMax])
+    const yScale = useMemo(()=> scaleLinear<number>({
+        range: [yMax, 0],
+        round: true,
+        domain: [0, Math.max(...ailments.map(getFreq))],
+        }),[yMax]) 
 
     return (
     <svg width={width} height={height}>
-        {ailments.map((d, i) => {
-        const barHeight = yMax - yPoint(d)!;
-        return (
-            <Group key={`bar-${i}`}>
-            <Bar
-                x={xPoint(d)}
-                y={yMax - barHeight}
-                height={barHeight}
-                width={xScale.bandwidth()}
-                fill="#fc2e1c"
-            />
-            </Group>
-        );
-        })}
+        <GradientTealBlue id="teal" />
+        <rect width={width} height={height} fill="url(#teal)" rx={14} />
+        <Group>
+            {ailments && ailments.map((d, idx) => {
+                const ailment = getAilment(d)
+                const barWidth = xScale.bandwidth();
+                const barHeight = yMax - (yScale(getFreq(d)) ?? 0);
+                const barX = xScale(ailment);
+                const barY = yMax - barHeight;
+                return (
+                    <Bar
+                        key={`bar-${ailment}-${idx}`}
+                        x={barX}
+                        y={barY}
+                        width={barWidth}
+                        height={barHeight}
+                        fill="rgba(23, 233, 217, .5)"
+                        onClick={() => {
+                        if (events) alert(`clicked: ${JSON.stringify(Object.values(d))}`);
+                        }}
+                    />
+                    );
+            })}
+        </Group>
     </svg>
     );
 }

@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"sort"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqljson"
@@ -24,6 +25,13 @@ type Server struct {
 	*gin.Engine
 }
 
+type AilmentResponse struct {
+	Name      string `json:"name"`
+	Frequency int    `json:"frequency"`
+	Id        int    `json:"id"`
+}
+
+// CORSMiddleware to let us ignore cors for local development
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
@@ -84,13 +92,12 @@ func (s *Server) GetAilmentsForSymptoms(c *gin.Context) {
 			Where(func(s *sql.Selector) {
 				s.
 					Where(sqljson.ValueContains(ailment.FieldHpos, hpoID))
-				//  Where(sqljson.ValueEQ(ailment.FieldSymptoms, symptoms.FrequencyHigh, sqljson.Path("frequency")))
 			}).
 			AllX(c)
 		filtered := filterAilments(a, hpoID)
 		ailments = append(ailments, filtered...)
 	}
-	ailmentHistogram := mapAilments(ailments)
+	ailmentHistogram := constructResponse(ailments)
 	c.JSON(200, ailmentHistogram)
 }
 
@@ -119,4 +126,41 @@ func mapAilments(ailments []*ent.Ailment) map[string]int {
 		}
 	}
 	return histogram
+}
+
+func unique(sample []*AilmentResponse) []*AilmentResponse {
+	var unique []*AilmentResponse
+	type key struct {
+		Name          string
+		Frequency, Id int
+	}
+	m := make(map[key]int)
+	for _, v := range sample {
+		k := key{v.Name, v.Frequency, v.Id}
+		if i, ok := m[k]; ok {
+			// Overwrite previous value per requirement in
+			// question to keep last matching value.
+			unique[i] = v
+		} else {
+			// Unique key found. Record position and collect
+			// in result.
+			m[k] = len(unique)
+			unique = append(unique, v)
+		}
+	}
+	return unique
+}
+
+func constructResponse(ailments []*ent.Ailment) []*AilmentResponse {
+	ailmentList := []*AilmentResponse{}
+	histogram := mapAilments(ailments)
+	for _, a := range ailments {
+		entry := &AilmentResponse{Name: a.Name, Id: a.ID, Frequency: histogram[a.Name]}
+		ailmentList = append(ailmentList, entry)
+	}
+	// return the objects ordered by frequency
+	sort.Slice(ailmentList, func(i, j int) bool {
+		return ailmentList[i].Frequency > ailmentList[j].Frequency
+	})
+	return unique(ailmentList)
 }

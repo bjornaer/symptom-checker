@@ -76,6 +76,20 @@ export const SymptomBox = ({api, propagateSelectedList}: {api: string, propagate
         propagateSelectedList(selected)
     }
 
+    const resetSelection = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        const allSelected = Array.from(
+            document.querySelectorAll('div.item.selected')
+          );
+        
+          allSelected.forEach(element=>{
+            element.className = "item"
+          })
+
+        setSelected([])
+        propagateSelectedList([])
+    }
+
     useEffect(() => {
         getData()
     }, [])
@@ -84,10 +98,11 @@ export const SymptomBox = ({api, propagateSelectedList}: {api: string, propagate
         <div className="App">
           {loading && <div>A moment please...</div>}
           {error && (
-            <div>{`There is a problem fetching the post data - ${error}`}</div>
+            <div>{`There is a problem fetching the post data - ${error} - try reloading`}</div>
           )}
           <div>
-            <p className="title">How are you feeling buddy?</p>
+            <button id="invisibutton" onClick={resetSelection}></button>
+            <p className="title">Search your symptoms and then click to select</p>
             <div className="search-container">
                 <input
                 type="search"
