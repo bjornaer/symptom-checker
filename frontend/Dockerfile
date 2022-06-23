@@ -1,3 +1,4 @@
+# unused dockerfile to serve frontend as standalone
 # build environment
 FROM node:16.15.0-alpine as build
 WORKDIR /usr/src/app

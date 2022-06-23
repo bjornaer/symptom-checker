@@ -14,6 +14,7 @@ import (
 	"github.com/bjornaer/sympton-checker/ent"
 	"github.com/bjornaer/sympton-checker/ent/ailment"
 	"github.com/bjornaer/sympton-checker/internal/symptoms"
+	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/net/html/charset"
 )
@@ -52,11 +53,13 @@ func NewServer(client *ent.Client) *Server {
 	r := gin.Default()
 	r.Use(CORSMiddleware())
 	s := &Server{client: client, Engine: r}
-	r.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "This is the symptom checker app")
-	})
-	r.GET("/symptoms", s.GetSymptoms)
-	r.POST("/symptoms", s.GetAilmentsForSymptoms)
+	// Serve frontend static files
+	r.Use(static.Serve("/", static.LocalFile("./frontend/build", true)))
+	api := r.Group("/api")
+	{
+		api.GET("/symptoms", s.GetSymptoms)
+		api.POST("/symptoms", s.GetAilmentsForSymptoms)
+	}
 	return s
 }
 

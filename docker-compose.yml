@@ -1,7 +1,7 @@
 version: '3'
 services:
-  symptom-checker-backend:
-    container_name: symptom-checker-backend
+  symptom-checker:
+    container_name: symptom-checker
     build: .
     ports: 
       - 8081:8081
@@ -10,21 +10,21 @@ services:
       - ailment
 
 
-  symptom-checker-frontend:
-    container_name: symptom-checker-frontend
-    build: ./frontend/health
-    environment:
-      - REACT_APP_API=symptom-checker-backend:8081
-    ports: 
-      - 3000:80
-    restart: on-failure
-    depends_on:
-      - symptom-checker-backend
-    networks:
-      - ailment
-    volumes:
-      - '.:/app'
-      - '/app/node_modules'
+  # symptom-checker-frontend:
+  #   container_name: symptom-checker-frontend
+  #   build: ./frontend/health
+  #   environment:
+  #     - REACT_APP_API=symptom-checker-backend:8081
+  #   ports: 
+  #     - 3000:80
+  #   restart: on-failure
+  #   depends_on:
+  #     - symptom-checker-backend
+  #   networks:
+  #     - ailment
+  #   volumes:
+  #     - '.:/app'
+  #     - '/app/node_modules'
 
 # Networks to be created to facilitate communication between containers
 networks:

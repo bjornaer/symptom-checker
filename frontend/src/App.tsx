@@ -6,7 +6,7 @@ import { AilmentBox } from './AilmentBox';
 import { HPO } from './types';
 
 function App() {
-  const api: string = process.env.REACT_APP_API || "http://localhost:8081"
+  const api: string = process.env.REACT_APP_API || "/api"
   const [showAilments, setShowAilments] = useState(false);
   const [selectedSymptoms, setselectedSymptoms] = useState<HPO[]>([]);
   const propagateSelectedList = (selected: HPO[]) => {

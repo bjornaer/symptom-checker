@@ -69,4 +69,12 @@ clean:
 	-rm -f ${VET_REPORT}
 	-rm -f ${BINARY}-*
 
-.PHONY: link linux darwin windows test vet fmt clean
+local:
+	cd ${BUILD_DIR}; \
+	go run ${MAIN_DIR} & npm run --prefix frontend start &
+
+docker:
+	cd ${BUILD_DIR}; \
+	docker-compose up
+
+.PHONY: link linux darwin windows test vet fmt clean run local docker
