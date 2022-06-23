@@ -2,6 +2,8 @@ export type Ailment = {
     name: string
     frequency: number
     id: number
+    expert: string
+    symptoms: Symptom[]
 }
 
 export type AilmentHistogram = Ailment[]

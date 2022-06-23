@@ -199,7 +199,7 @@ body {
   }
 }
 
-li {
+.nice-list {
   counter-increment: index; 
   display: flex;
   align-items: center;
@@ -208,7 +208,7 @@ li {
 }
 
 /* Element counter */
-li::before {
+.nice-list::before {
   content: counters(index, ".", decimal-leading-zero);
   font-size: 1.5rem;
   text-align: right;
@@ -228,3 +228,50 @@ li::before {
 li + li {
   border-top: 1px solid rgba(255,255,255,0.2);
 }
+
+.detail-box {
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+  padding: 12px 0;
+}
+
+.detail {
+  background-image: linear-gradient(144deg, #37ef50, #5B42F3 50%,#00DDEB);
+  background-attachment: fixed;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.detail + .detail {
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+a {
+  outline: purple;
+  text-decoration: none;
+  padding: 2px 1px 0;
+}
+
+a:link {
+  color: white;
+}
+
+a:visited {
+  color: white;
+}
+
+a:focus {
+  border-bottom: 1px solid;
+  background: #BAE498;
+}
+
+a:hover {
+  border-bottom: 1px solid;
+  background: #CDFEAA;
+  background-image: linear-gradient(144deg, #37efe6, #3fc4f0 50%,#00DDEB);
+}
+
+a:active {
+  background: #265301;
+  color: #CDFEAA;
+}
+

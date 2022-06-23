@@ -151,7 +151,6 @@ func CreateAilment(ctx context.Context, client *ent.Client, ailmentXML *HPODisor
 	if err != nil {
 		return nil, fmt.Errorf("failed creating user: %w", err)
 	}
-	// log.Println("ailment was created: ", a.Name)
 	return a, nil
 }
 

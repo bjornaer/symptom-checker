@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqljson"
 	"github.com/bjornaer/sympton-checker/ent"
 	"github.com/bjornaer/sympton-checker/ent/ailment"
+	"github.com/bjornaer/sympton-checker/ent/schema"
 	"github.com/bjornaer/sympton-checker/internal/symptoms"
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
@@ -27,9 +28,11 @@ type Server struct {
 }
 
 type AilmentResponse struct {
-	Name      string `json:"name"`
-	Frequency int    `json:"frequency"`
-	Id        int    `json:"id"`
+	Name      string                  `json:"name"`
+	Frequency int                     `json:"frequency"`
+	Id        int                     `json:"id"`
+	Expert    string                  `json:"expert"`
+	Symptoms  []schema.SymptomDetails `json:"symptoms"`
 }
 
 // CORSMiddleware to let us ignore cors for local development
@@ -58,7 +61,7 @@ func NewServer(client *ent.Client) *Server {
 	api := r.Group("/api")
 	{
 		api.GET("/symptoms", s.GetSymptoms)
-		api.POST("/symptoms", s.GetAilmentsForSymptoms)
+		api.POST("/symptoms", s.GetAilmentsFromSymptoms)
 	}
 	return s
 }
@@ -84,7 +87,7 @@ func (s *Server) LoadSymptomsFromRemote(source string) {
 	symptoms.PopulateStore(context.Background(), s.client, &xmlContent.HPODisorderSetStatusList)
 }
 
-func (s *Server) GetAilmentsForSymptoms(c *gin.Context) {
+func (s *Server) GetAilmentsFromSymptoms(c *gin.Context) {
 	var symptomHPOIdList []string
 	if err := c.BindJSON(&symptomHPOIdList); err != nil {
 		c.String(400, "Incorrect payload")
@@ -158,7 +161,8 @@ func constructResponse(ailments []*ent.Ailment) []*AilmentResponse {
 	ailmentList := []*AilmentResponse{}
 	histogram := mapAilments(ailments)
 	for _, a := range ailments {
-		entry := &AilmentResponse{Name: a.Name, Id: a.ID, Frequency: histogram[a.Name]}
+		symptomsList := getSymptomDetailsList(a.Symptoms)
+		entry := &AilmentResponse{Name: a.Name, Id: a.ID, Frequency: histogram[a.Name], Expert: a.Expert, Symptoms: symptomsList}
 		ailmentList = append(ailmentList, entry)
 	}
 	// return the objects ordered by frequency
@@ -166,4 +170,12 @@ func constructResponse(ailments []*ent.Ailment) []*AilmentResponse {
 		return ailmentList[i].Frequency > ailmentList[j].Frequency
 	})
 	return unique(ailmentList)
+}
+
+func getSymptomDetailsList(symptomsMap map[string]schema.SymptomDetails) []schema.SymptomDetails {
+	l := make([]schema.SymptomDetails, 0, len(symptomsMap))
+	for _, value := range symptomsMap {
+		l = append(l, value)
+	}
+	return l
 }
