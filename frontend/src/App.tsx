@@ -12,7 +12,15 @@ function App() {
   const propagateSelectedList = (selected: HPO[]) => {
     setselectedSymptoms(selected)
   }
+  const triggerSelection = () => {
+    if (selectedSymptoms.length) {
+      setShowAilments(true)
+    } else {
+      alert("Please select what symptoms you have!")
+    }
+  }
   const triggerSelectionReset = () => {
+    setShowAilments(false)
     const btn = document.getElementById('invisibutton')
     btn && btn.click()
   }
@@ -20,8 +28,8 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>Symptom Checker</h1>
-        {!showAilments && <button className="button-64 confirm" role="button" onClick={()=>{setShowAilments(true)}}><span className="text">What Do I Have?</span></button>}
-        {showAilments && <button className="button-64 clear" role="button" onClick={()=>{triggerSelectionReset();setShowAilments(false)}}><span className="text">Clear</span></button>}
+        {!showAilments && <button className="button-64 confirm" role="button" onClick={()=>{triggerSelection()}}><span className="text">What Do I Have?</span></button>}
+        {showAilments && <button className="button-64 clear" role="button" onClick={()=>{triggerSelectionReset()}}><span className="text">Clear</span></button>}
         <div id='wrapper'>
           <div className='symptoms'>{<SymptomBox api={`${api}`} propagateSelectedList={propagateSelectedList}/>}</div>
           <div className='ailments'>

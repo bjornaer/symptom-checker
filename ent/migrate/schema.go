@@ -14,6 +14,7 @@ var (
 		{Name: "name", Type: field.TypeString, Default: "unknown"},
 		{Name: "symptoms", Type: field.TypeJSON},
 		{Name: "hpos", Type: field.TypeJSON},
+		{Name: "expert", Type: field.TypeString, Default: ""},
 	}
 	// AilmentsTable holds the schema information for the "ailments" table.
 	AilmentsTable = &schema.Table{

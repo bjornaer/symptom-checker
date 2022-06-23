@@ -46,7 +46,8 @@ export const AilmentBox = ({api, hpoList}: {api: string, hpoList: string[]}) => 
             <div>{`There is a problem fetching the post data - ${error}`}</div>
           )}
           {data && <div id="content_container">
-            <div id="list" className="scrollable">
+          <h3>Most Likely Ailments</h3>
+            <div id="list" className="item-container scrollable">
                 <AilmentList data={data}/>
             </div>
             {

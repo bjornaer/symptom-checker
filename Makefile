@@ -53,7 +53,8 @@ run:
 
 test:
 	cd ${BUILD_DIR}; \
-	go test -v -race ./...
+
+	go test -v -race $$(go list ./... | grep -v /ent)
 
 vet:
 	-cd ${BUILD_DIR}; \
@@ -71,7 +72,7 @@ clean:
 
 local:
 	cd ${BUILD_DIR}; \
-	go run ${MAIN_DIR} & npm run --prefix frontend start &
+	(trap 'kill 0' SIGINT; go run ${MAIN_DIR} & npm run --prefix frontend start)
 
 docker:
 	cd ${BUILD_DIR}; \

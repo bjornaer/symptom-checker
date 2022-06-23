@@ -139,12 +139,14 @@ func CreateAilment(ctx context.Context, client *ent.Client, ailmentXML *HPODisor
 	}
 	name := ailmentXML.Disorder.Name.Text
 	associatedSymptoms, hpos := CreateAssociatedSymptomList(ctx, client, ailmentXML.Disorder.HPODisorderAssociationList)
+	expertLink := ailmentXML.Disorder.ExpertLink.Text
 	a, err := client.Ailment.
 		Create().
 		SetID(id).
 		SetName(name).
 		SetSymptoms(associatedSymptoms).
 		SetHpos(hpos).
+		SetExpert(expertLink).
 		Save(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed creating user: %w", err)

@@ -46,6 +46,20 @@ func (ac *AilmentCreate) SetHpos(s []string) *AilmentCreate {
 	return ac
 }
 
+// SetExpert sets the "expert" field.
+func (ac *AilmentCreate) SetExpert(s string) *AilmentCreate {
+	ac.mutation.SetExpert(s)
+	return ac
+}
+
+// SetNillableExpert sets the "expert" field if the given value is not nil.
+func (ac *AilmentCreate) SetNillableExpert(s *string) *AilmentCreate {
+	if s != nil {
+		ac.SetExpert(*s)
+	}
+	return ac
+}
+
 // SetID sets the "id" field.
 func (ac *AilmentCreate) SetID(i int) *AilmentCreate {
 	ac.mutation.SetID(i)
@@ -135,6 +149,10 @@ func (ac *AilmentCreate) defaults() {
 		v := ailment.DefaultHpos
 		ac.mutation.SetHpos(v)
 	}
+	if _, ok := ac.mutation.Expert(); !ok {
+		v := ailment.DefaultExpert
+		ac.mutation.SetExpert(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -147,6 +165,9 @@ func (ac *AilmentCreate) check() error {
 	}
 	if _, ok := ac.mutation.Hpos(); !ok {
 		return &ValidationError{Name: "hpos", err: errors.New(`ent: missing required field "Ailment.hpos"`)}
+	}
+	if _, ok := ac.mutation.Expert(); !ok {
+		return &ValidationError{Name: "expert", err: errors.New(`ent: missing required field "Ailment.expert"`)}
 	}
 	if v, ok := ac.mutation.ID(); ok {
 		if err := ailment.IDValidator(v); err != nil {
@@ -209,6 +230,14 @@ func (ac *AilmentCreate) createSpec() (*Ailment, *sqlgraph.CreateSpec) {
 			Column: ailment.FieldHpos,
 		})
 		_node.Hpos = value
+	}
+	if value, ok := ac.mutation.Expert(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: ailment.FieldExpert,
+		})
+		_node.Expert = value
 	}
 	return _node, _spec
 }

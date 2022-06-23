@@ -38,6 +38,7 @@ type AilmentMutation struct {
 	name          *string
 	symptoms      *map[string]schema.SymptomDetails
 	hpos          *[]string
+	expert        *string
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*Ailment, error)
@@ -256,6 +257,42 @@ func (m *AilmentMutation) ResetHpos() {
 	m.hpos = nil
 }
 
+// SetExpert sets the "expert" field.
+func (m *AilmentMutation) SetExpert(s string) {
+	m.expert = &s
+}
+
+// Expert returns the value of the "expert" field in the mutation.
+func (m *AilmentMutation) Expert() (r string, exists bool) {
+	v := m.expert
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldExpert returns the old "expert" field's value of the Ailment entity.
+// If the Ailment object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AilmentMutation) OldExpert(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldExpert is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldExpert requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldExpert: %w", err)
+	}
+	return oldValue.Expert, nil
+}
+
+// ResetExpert resets all changes to the "expert" field.
+func (m *AilmentMutation) ResetExpert() {
+	m.expert = nil
+}
+
 // Where appends a list predicates to the AilmentMutation builder.
 func (m *AilmentMutation) Where(ps ...predicate.Ailment) {
 	m.predicates = append(m.predicates, ps...)
@@ -275,7 +312,7 @@ func (m *AilmentMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AilmentMutation) Fields() []string {
-	fields := make([]string, 0, 3)
+	fields := make([]string, 0, 4)
 	if m.name != nil {
 		fields = append(fields, ailment.FieldName)
 	}
@@ -284,6 +321,9 @@ func (m *AilmentMutation) Fields() []string {
 	}
 	if m.hpos != nil {
 		fields = append(fields, ailment.FieldHpos)
+	}
+	if m.expert != nil {
+		fields = append(fields, ailment.FieldExpert)
 	}
 	return fields
 }
@@ -299,6 +339,8 @@ func (m *AilmentMutation) Field(name string) (ent.Value, bool) {
 		return m.Symptoms()
 	case ailment.FieldHpos:
 		return m.Hpos()
+	case ailment.FieldExpert:
+		return m.Expert()
 	}
 	return nil, false
 }
@@ -314,6 +356,8 @@ func (m *AilmentMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldSymptoms(ctx)
 	case ailment.FieldHpos:
 		return m.OldHpos(ctx)
+	case ailment.FieldExpert:
+		return m.OldExpert(ctx)
 	}
 	return nil, fmt.Errorf("unknown Ailment field %s", name)
 }
@@ -343,6 +387,13 @@ func (m *AilmentMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetHpos(v)
+		return nil
+	case ailment.FieldExpert:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetExpert(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Ailment field %s", name)
@@ -401,6 +452,9 @@ func (m *AilmentMutation) ResetField(name string) error {
 		return nil
 	case ailment.FieldHpos:
 		m.ResetHpos()
+		return nil
+	case ailment.FieldExpert:
+		m.ResetExpert()
 		return nil
 	}
 	return fmt.Errorf("unknown Ailment field %s", name)

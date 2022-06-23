@@ -26,6 +26,10 @@ func init() {
 	ailmentDescHpos := ailmentFields[3].Descriptor()
 	// ailment.DefaultHpos holds the default value on creation for the hpos field.
 	ailment.DefaultHpos = ailmentDescHpos.Default.([]string)
+	// ailmentDescExpert is the schema descriptor for expert field.
+	ailmentDescExpert := ailmentFields[4].Descriptor()
+	// ailment.DefaultExpert holds the default value on creation for the expert field.
+	ailment.DefaultExpert = ailmentDescExpert.Default.(string)
 	// ailmentDescID is the schema descriptor for id field.
 	ailmentDescID := ailmentFields[0].Descriptor()
 	// ailment.IDValidator is a validator for the "id" field. It is called by the builders before save.

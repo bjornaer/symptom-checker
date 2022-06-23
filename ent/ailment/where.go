@@ -97,6 +97,13 @@ func Name(v string) predicate.Ailment {
 	})
 }
 
+// Expert applies equality check predicate on the "expert" field. It's identical to ExpertEQ.
+func Expert(v string) predicate.Ailment {
+	return predicate.Ailment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldExpert), v))
+	})
+}
+
 // NameEQ applies the EQ predicate on the "name" field.
 func NameEQ(v string) predicate.Ailment {
 	return predicate.Ailment(func(s *sql.Selector) {
@@ -205,6 +212,117 @@ func NameEqualFold(v string) predicate.Ailment {
 func NameContainsFold(v string) predicate.Ailment {
 	return predicate.Ailment(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldName), v))
+	})
+}
+
+// ExpertEQ applies the EQ predicate on the "expert" field.
+func ExpertEQ(v string) predicate.Ailment {
+	return predicate.Ailment(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldExpert), v))
+	})
+}
+
+// ExpertNEQ applies the NEQ predicate on the "expert" field.
+func ExpertNEQ(v string) predicate.Ailment {
+	return predicate.Ailment(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldExpert), v))
+	})
+}
+
+// ExpertIn applies the In predicate on the "expert" field.
+func ExpertIn(vs ...string) predicate.Ailment {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Ailment(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldExpert), v...))
+	})
+}
+
+// ExpertNotIn applies the NotIn predicate on the "expert" field.
+func ExpertNotIn(vs ...string) predicate.Ailment {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Ailment(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldExpert), v...))
+	})
+}
+
+// ExpertGT applies the GT predicate on the "expert" field.
+func ExpertGT(v string) predicate.Ailment {
+	return predicate.Ailment(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldExpert), v))
+	})
+}
+
+// ExpertGTE applies the GTE predicate on the "expert" field.
+func ExpertGTE(v string) predicate.Ailment {
+	return predicate.Ailment(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldExpert), v))
+	})
+}
+
+// ExpertLT applies the LT predicate on the "expert" field.
+func ExpertLT(v string) predicate.Ailment {
+	return predicate.Ailment(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldExpert), v))
+	})
+}
+
+// ExpertLTE applies the LTE predicate on the "expert" field.
+func ExpertLTE(v string) predicate.Ailment {
+	return predicate.Ailment(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldExpert), v))
+	})
+}
+
+// ExpertContains applies the Contains predicate on the "expert" field.
+func ExpertContains(v string) predicate.Ailment {
+	return predicate.Ailment(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldExpert), v))
+	})
+}
+
+// ExpertHasPrefix applies the HasPrefix predicate on the "expert" field.
+func ExpertHasPrefix(v string) predicate.Ailment {
+	return predicate.Ailment(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldExpert), v))
+	})
+}
+
+// ExpertHasSuffix applies the HasSuffix predicate on the "expert" field.
+func ExpertHasSuffix(v string) predicate.Ailment {
+	return predicate.Ailment(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldExpert), v))
+	})
+}
+
+// ExpertEqualFold applies the EqualFold predicate on the "expert" field.
+func ExpertEqualFold(v string) predicate.Ailment {
+	return predicate.Ailment(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldExpert), v))
+	})
+}
+
+// ExpertContainsFold applies the ContainsFold predicate on the "expert" field.
+func ExpertContainsFold(v string) predicate.Ailment {
+	return predicate.Ailment(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldExpert), v))
 	})
 }
 

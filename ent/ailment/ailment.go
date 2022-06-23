@@ -17,6 +17,8 @@ const (
 	FieldSymptoms = "symptoms"
 	// FieldHpos holds the string denoting the hpos field in the database.
 	FieldHpos = "hpos"
+	// FieldExpert holds the string denoting the expert field in the database.
+	FieldExpert = "expert"
 	// Table holds the table name of the ailment in the database.
 	Table = "ailments"
 )
@@ -27,6 +29,7 @@ var Columns = []string{
 	FieldName,
 	FieldSymptoms,
 	FieldHpos,
+	FieldExpert,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -46,6 +49,8 @@ var (
 	DefaultSymptoms map[string]schema.SymptomDetails
 	// DefaultHpos holds the default value on creation for the "hpos" field.
 	DefaultHpos []string
+	// DefaultExpert holds the default value on creation for the "expert" field.
+	DefaultExpert string
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(int) error
 )

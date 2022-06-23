@@ -23,6 +23,8 @@ type Ailment struct {
 	Symptoms map[string]schema.SymptomDetails `json:"symptoms,omitempty"`
 	// Hpos holds the value of the "hpos" field.
 	Hpos []string `json:"hpos,omitempty"`
+	// Expert holds the value of the "expert" field.
+	Expert string `json:"expert,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -34,7 +36,7 @@ func (*Ailment) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new([]byte)
 		case ailment.FieldID:
 			values[i] = new(sql.NullInt64)
-		case ailment.FieldName:
+		case ailment.FieldName, ailment.FieldExpert:
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Ailment", columns[i])
@@ -79,6 +81,12 @@ func (a *Ailment) assignValues(columns []string, values []interface{}) error {
 					return fmt.Errorf("unmarshal field hpos: %w", err)
 				}
 			}
+		case ailment.FieldExpert:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field expert", values[i])
+			} else if value.Valid {
+				a.Expert = value.String
+			}
 		}
 	}
 	return nil
@@ -113,6 +121,8 @@ func (a *Ailment) String() string {
 	builder.WriteString(fmt.Sprintf("%v", a.Symptoms))
 	builder.WriteString(", hpos=")
 	builder.WriteString(fmt.Sprintf("%v", a.Hpos))
+	builder.WriteString(", expert=")
+	builder.WriteString(a.Expert)
 	builder.WriteByte(')')
 	return builder.String()
 }

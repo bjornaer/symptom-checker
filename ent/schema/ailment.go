@@ -27,6 +27,8 @@ func (Ailment) Fields() []ent.Field {
 			Default(map[string]SymptomDetails{}),
 		field.Strings("hpos").
 			Default([]string{}),
+		field.String("expert").
+			Default(""),
 	}
 }
 

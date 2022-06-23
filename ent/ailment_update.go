@@ -54,6 +54,20 @@ func (au *AilmentUpdate) SetHpos(s []string) *AilmentUpdate {
 	return au
 }
 
+// SetExpert sets the "expert" field.
+func (au *AilmentUpdate) SetExpert(s string) *AilmentUpdate {
+	au.mutation.SetExpert(s)
+	return au
+}
+
+// SetNillableExpert sets the "expert" field if the given value is not nil.
+func (au *AilmentUpdate) SetNillableExpert(s *string) *AilmentUpdate {
+	if s != nil {
+		au.SetExpert(*s)
+	}
+	return au
+}
+
 // Mutation returns the AilmentMutation object of the builder.
 func (au *AilmentUpdate) Mutation() *AilmentMutation {
 	return au.mutation
@@ -152,6 +166,13 @@ func (au *AilmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: ailment.FieldHpos,
 		})
 	}
+	if value, ok := au.mutation.Expert(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: ailment.FieldExpert,
+		})
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, au.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{ailment.Label}
@@ -194,6 +215,20 @@ func (auo *AilmentUpdateOne) SetSymptoms(md map[string]schema.SymptomDetails) *A
 // SetHpos sets the "hpos" field.
 func (auo *AilmentUpdateOne) SetHpos(s []string) *AilmentUpdateOne {
 	auo.mutation.SetHpos(s)
+	return auo
+}
+
+// SetExpert sets the "expert" field.
+func (auo *AilmentUpdateOne) SetExpert(s string) *AilmentUpdateOne {
+	auo.mutation.SetExpert(s)
+	return auo
+}
+
+// SetNillableExpert sets the "expert" field if the given value is not nil.
+func (auo *AilmentUpdateOne) SetNillableExpert(s *string) *AilmentUpdateOne {
+	if s != nil {
+		auo.SetExpert(*s)
+	}
 	return auo
 }
 
@@ -317,6 +352,13 @@ func (auo *AilmentUpdateOne) sqlSave(ctx context.Context) (_node *Ailment, err e
 			Type:   field.TypeJSON,
 			Value:  value,
 			Column: ailment.FieldHpos,
+		})
+	}
+	if value, ok := auo.mutation.Expert(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: ailment.FieldExpert,
 		})
 	}
 	_node = &Ailment{config: auo.config}
