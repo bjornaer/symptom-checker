@@ -4,7 +4,11 @@
 *Cough!* Welcome to Symptom-Checker
 
 This is a service which runs a very rudimentary Gin Gonic server and React UI, whose sole purpose is to provide you with a tool to find ailments that match-up to your health status. **This is by no means a medical diagnosis, if you feel unwell go see a doctor.**
+---
+### Cloning
 
+do your usual, `git clone blabla` but just to take into account, the `Makefile` assumes you will place the codebase under `~/personal/sympton-checker`
+So either place it in the same structure, or go into the makefile and at the begining make sure to replace the `BUILD_DIR` variable to point to the proper directory... *why this* you might ask? Well, cause that is my folder structure, that's why.
 ---
 ### Run 
 
